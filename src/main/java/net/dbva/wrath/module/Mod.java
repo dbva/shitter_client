@@ -20,7 +20,7 @@ public abstract class Mod {
     private String description;
     private Category category;
     private int key;
-    private boolean enabled;
+    private static boolean enabled;
 
     private final List<Setting> settings = new ArrayList<>();
     protected MinecraftClient mc = MinecraftClient.getInstance();
@@ -52,7 +52,7 @@ public abstract class Mod {
     }
 
     public void toggle() {
-        this.enabled = !this.enabled;
+        enabled = !enabled;
         assert mc.player != null;
 
         if (enabled) { onEnable();
@@ -75,7 +75,7 @@ public abstract class Mod {
     public void setCategory(Category category) { this.category = category; }
     public int getKey() { return key; }
     public void setKey(int key) { this.key = key; }
-    public boolean isEnabled() { return enabled; }
+    public static boolean isEnabled() { return enabled; }
 
     public void nullCheck() {
         if (mc.world == null || mc.player == null || mc.getNetworkHandler() == null || mc.getBufferBuilders() == null) {
@@ -84,7 +84,7 @@ public abstract class Mod {
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        Mod.enabled = enabled;
 
         if (enabled) onEnable();
         else onDisable();
