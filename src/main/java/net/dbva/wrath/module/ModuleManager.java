@@ -7,7 +7,6 @@ import net.dbva.wrath.module.player.SpamXP;
 import net.dbva.wrath.module.render.FullBright;
 import net.dbva.wrath.module.render.NoHurtCam;
 
-import net.dbva.wrath.module.render.ViewModel;
 import net.dbva.wrath.ui.Hud;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +54,5 @@ public class ModuleManager {
         modules.add(new InvWalk());
         modules.add(new AutoDoubleHand());
         modules.add(new AutoCope());
-        modules.add(new ViewModel());
     }
 }

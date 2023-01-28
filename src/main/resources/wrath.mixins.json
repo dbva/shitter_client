@@ -10,8 +10,7 @@
     "KeyboardMixin",
     "InGameHudMixin",
     "GameRendererMixin",
-    "MinecraftClientAccessor",
-    "HeldItemRendererMixin"
+    "MinecraftClientAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

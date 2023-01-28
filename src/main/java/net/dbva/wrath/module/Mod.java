@@ -3,7 +3,6 @@ package net.dbva.wrath.module;
 import net.dbva.wrath.module.settings.Setting;
 import net.dbva.wrath.utils.ChatUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public abstract class Mod {
     private String description;
     private Category category;
     private int key;
-    private static boolean enabled;
+    private boolean enabled;
 
     private final List<Setting> settings = new ArrayList<>();
     protected MinecraftClient mc = MinecraftClient.getInstance();
@@ -52,7 +51,7 @@ public abstract class Mod {
     }
 
     public void toggle() {
-        enabled = !enabled;
+        this.enabled = !this.enabled;
         assert mc.player != null;
 
         if (enabled) { onEnable();
@@ -75,7 +74,7 @@ public abstract class Mod {
     public void setCategory(Category category) { this.category = category; }
     public int getKey() { return key; }
     public void setKey(int key) { this.key = key; }
-    public static boolean isEnabled() { return enabled; }
+    public boolean isEnabled() { return enabled; }
 
     public void nullCheck() {
         if (mc.world == null || mc.player == null || mc.getNetworkHandler() == null || mc.getBufferBuilders() == null) {
@@ -84,7 +83,7 @@ public abstract class Mod {
     }
 
     public void setEnabled(boolean enabled) {
-        Mod.enabled = enabled;
+        this.enabled = enabled;
 
         if (enabled) onEnable();
         else onDisable();

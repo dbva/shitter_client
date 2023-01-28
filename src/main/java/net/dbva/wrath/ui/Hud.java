@@ -8,12 +8,9 @@ import net.dbva.wrath.module.settings.BooleanSetting;
 import net.dbva.wrath.module.settings.ModeSetting;
 import net.dbva.wrath.ui.screens.clickgui.ClickGUI;
 import net.dbva.wrath.utils.PlayerUtils;
-import net.dbva.wrath.utils.RenderUtils;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Formatting;
 
 import java.awt.*;
 import java.util.List;
@@ -37,12 +34,11 @@ public class Hud extends Mod {
         RenderHud(matrices);
     }
 
-    public static int rainbow(int delay) {
-        double rainbowState = Math.ceil((System.currentTimeMillis() + delay) / 20.0);
-        rainbowState %= 360;
-        return Color.getHSBColor((float) (rainbowState / 360.0f), 1f, 1f).getRGB();
+    public static int rainbow(float seconds, float saturation, float brightness, long index) {
+        float hue = ((System.currentTimeMillis() + index) % (int) (seconds * 1000)) / (float) (seconds * 1000);
+        int color = Color.HSBtoRGB(hue, saturation, 1);
+        return color;
     }
-
 
     public static void RenderHud(MatrixStack matrices) {
         int index = 0;
@@ -50,22 +46,22 @@ public class Hud extends Mod {
         int sHeight = mc.getWindow().getScaledHeight();
 
         List<Mod> enabled = ModuleManager.INSTANCE.getEnabledModules();
-        enabled.sort(Comparator.comparingInt(m -> mc.textRenderer.getWidth(((Mod) m).getDisplayName())).reversed());
-
-        RenderUtils.drawQuad(20,20,20,20, new MatrixStack());
+        enabled.sort(Comparator.comparingInt(m -> IFont.legacy18.getStringWidth(((Mod) m).getDisplayName())).reversed());
 
         if (mc.currentScreen == ClickGUI.INSTANCE) return;
         for (Mod mod : enabled) {
             if (modlist.isEnabled()) {
-                IFont.legacy16.drawStringWithShadow(matrices, mod.getDisplayName() + " " + Formatting.GRAY, (sWidth - 4) - IFont.legacy16.getStringWidth(mod.getDisplayName()), 16 + (index * IFont.legacy16.getFontHeight()), rainbow(1));
+                DrawableHelper.fill(matrices, sWidth - 11 - IFont.legacy18.getStringWidth(mod.getDisplayName()), IFont.legacy18.getFontHeight() * index + 6, sWidth - 5, (IFont.legacy18.getFontHeight() * index) + IFont.legacy18.getFontHeight() + 6, new Color(28, 28, 28, 80).getRGB());
+                IFont.legacy18.drawStringWithShadow(matrices, mod.getDisplayName(), (sWidth - 10) - IFont.legacy18.getStringWidth(mod.getDisplayName()), 6 + (index * IFont.legacy18.getFontHeight()), rainbow(10, 0.8f, 1, 400L * index));
+                DrawableHelper.fill(matrices, sWidth - 5, IFont.legacy18.getFontHeight() * index + 5, sWidth - 3, (IFont.legacy18.getFontHeight() * index) + IFont.legacy18.getFontHeight() + 8, rainbow(10, 0.8f, 1, 400L * index));
                 index++;
             }
         }
         if (fps.isEnabled()) {
-            IFont.legacy18.drawStringWithShadow(matrices, "§7[§4FPS§7]§f " + MinecraftClientAccessor.getFps(), (5), (sHeight - 5), -1);
+            IFont.legacy18.drawStringWithShadow(matrices, "§7[§r" + "FPS" + "§7]§f " + MinecraftClientAccessor.getFps(), (5), (sHeight - 30), rainbow(10, 0.8f, 1, 400L * index));
         }
         if (ping.isEnabled()) {
-            IFont.legacy18.drawStringWithShadow(matrices, "§7[§4PING§7]§f " + PlayerUtils.getPing() + "ms", (5), (sHeight - 15), -1);
+            IFont.legacy18.drawStringWithShadow(matrices, "§7[§r" + "PING" + "§7]§f " + PlayerUtils.getPing() + "ms", (5), (sHeight - 15), rainbow(10, 0.8f, 1, 400L * index));
         }
     }
 }
